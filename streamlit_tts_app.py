@@ -1017,6 +1017,21 @@ import streamlit.components.v1 as components
 import soundfile as sf
 import io
 import os
+import urllib.request
+
+def download_file(url, filename):
+    if not os.path.exists(filename):
+        urllib.request.urlretrieve(url, filename)
+
+download_file(
+    "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx",
+    "kokoro-v1.0.onnx"
+)
+
+download_file(
+    "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
+    "voices-v1.0.bin"
+)
 
 st.set_page_config(page_title="Orpheus TTS Studio", page_icon="🎙️", layout="wide", initial_sidebar_state="collapsed")
 
