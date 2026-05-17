@@ -1012,6 +1012,713 @@
 # </div>
 # """, unsafe_allow_html=True)
 
+# import streamlit as st
+# import streamlit.components.v1 as components
+# import soundfile as sf
+# import io
+# import os
+# import os
+# import urllib.request
+
+# def download_file(url, filename):
+#     if not os.path.exists(filename):
+#         urllib.request.urlretrieve(url, filename)
+
+# download_file(
+#     "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx",
+#     "kokoro-v1.0.onnx"
+# )
+
+# download_file(
+#     "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
+#     "voices-v1.0.bin"
+# )
+
+# st.set_page_config(page_title="Orpheus TTS Studio", page_icon="🎙️", layout="wide", initial_sidebar_state="collapsed")
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  GLOBAL CSS  —  charcoal/white high-contrast theme
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# st.markdown("""
+# <style>
+# @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+# /* ── Base ── */
+# html, body, [class*="css"] {
+#     font-family: 'Inter', sans-serif !important;
+#     background: #111318 !important;
+#     color: #F0F0F5 !important;
+# }
+# .main .block-container {
+#     padding: 1.8rem 2.2rem 3rem !important;
+#     max-width: 1380px !important;
+# }
+# section[data-testid="stSidebar"], #MainMenu, footer, header { display:none !important; visibility:hidden !important; }
+
+# /* ── Hide sync textarea ── */
+# div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stTextArea"]) {
+#     visibility: hidden !important;
+#     height: 0 !important;
+#     overflow: hidden !important;
+#     margin: 0 !important;
+#     padding: 0 !important;
+# }
+
+# /* ── Selectbox ── */
+# .stSelectbox > div > div {
+#     background: #1E2028 !important;
+#     border: 1.5px solid #2E3140 !important;
+#     border-radius: 10px !important;
+#     color: #F0F0F5 !important;
+#     font-size: 14px !important;
+#     min-height: 44px !important;
+#     padding: 2px 10px !important;
+# }
+# .stSelectbox > div > div:focus-within {
+#     border-color: #6C63FF !important;
+#     box-shadow: 0 0 0 3px rgba(108,99,255,0.15) !important;
+# }
+# [data-baseweb="select"] svg { color: #888 !important; }
+# [data-baseweb="select"] [data-testid="stMarkdownContainer"] p { color: #F0F0F5 !important; }
+# div[role="listbox"] { background: #1E2028 !important; border: 1px solid #2E3140 !important; border-radius: 10px !important; }
+# div[role="option"] { color: #F0F0F5 !important; padding: 10px 14px !important; }
+# div[role="option"]:hover { background: #2A2D3A !important; }
+# div[role="option"][aria-selected="true"] { background: #6C63FF22 !important; color: #A09BFF !important; }
+
+# /* ── Slider ── */
+# .stSlider > label { color: #9A9AB0 !important; font-size: 13px !important; font-weight: 500 !important; }
+# div[data-baseweb="slider"] [role="slider"] {
+#     background: #6C63FF !important;
+#     border-color: #6C63FF !important;
+#     box-shadow: 0 0 0 4px rgba(108,99,255,0.2) !important;
+# }
+# div[data-baseweb="slider"] > div > div > div:first-child {
+#     background: linear-gradient(90deg, #6C63FF, #A09BFF) !important;
+# }
+
+# /* ── All buttons base ── */
+# .stButton > button {
+#     background: #1E2028 !important;
+#     color: #C8C8D8 !important;
+#     border: 1.5px solid #2E3140 !important;
+#     border-radius: 9px !important;
+#     font-family: 'Inter', sans-serif !important;
+#     font-size: 13px !important;
+#     font-weight: 500 !important;
+#     padding: 8px 12px !important;
+#     width: 100% !important;
+#     transition: all .18s ease !important;
+#     cursor: pointer !important;
+# }
+# .stButton > button:hover {
+#     background: #252830 !important;
+#     border-color: #6C63FF !important;
+#     color: #F0F0F5 !important;
+#     transform: translateY(-1px) !important;
+# }
+# .stButton > button:active { transform: translateY(0) !important; }
+
+# /* ── Download button ── */
+# .stDownloadButton > button {
+#     background: #1E2028 !important;
+#     border: 1.5px solid #2E3140 !important;
+#     color: #A09BFF !important;
+#     border-radius: 10px !important;
+#     font-weight: 600 !important;
+#     font-size: 14px !important;
+#     padding: 10px !important;
+#     width: 100% !important;
+# }
+# .stDownloadButton > button:hover {
+#     border-color: #6C63FF !important;
+#     background: #252830 !important;
+# }
+
+# /* ── Audio player ── */
+# .stAudio { background: #1E2028 !important; border-radius: 12px !important; padding: 12px !important; }
+# audio { width: 100%; border-radius: 8px; }
+
+# /* ── Alerts ── */
+# .stSuccess > div { background: #0F2A1A !important; border: 1px solid #22863a !important; border-radius:10px !important; color:#4ade80 !important; }
+# .stError > div   { background: #2A0F0F !important; border: 1px solid #7f1d1d !important; border-radius:10px !important; color:#f87171 !important; }
+
+# hr { border: none !important; border-top: 1px solid #22252F !important; margin: 1.4rem 0 !important; }
+# </style>
+# """, unsafe_allow_html=True)
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  DATA
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ALL_EMOTIONS = [
+#     ("happy",      "#F59E0B", "😊"),
+#     ("excited",    "#F97316", "🤩"),
+#     ("surprise",   "#EAB308", "😮"),
+#     ("sad",        "#60A5FA", "😢"),
+#     ("crying",     "#818CF8", "😭"),
+#     ("angry",      "#F87171", "😠"),
+#     ("shout",      "#EF4444", "📢"),
+#     ("frustrated", "#FB923C", "😤"),
+#     ("whisper",    "#C084FC", "🤫"),
+#     ("sleepy",     "#A78BFA", "😴"),
+#     ("slow",       "#94A3B8", "🐢"),
+#     ("panicky",    "#FB7185", "😱"),
+#     ("fast",       "#FB923C", "⚡"),
+#     ("disgust",    "#34D399", "🤢"),
+#     ("curious",    "#2DD4BF", "🤔"),
+#     ("deep",       "#38BDF8", "🔊"),
+#     ("high",       "#E879F9", "🎵"),
+#     ("normal",     "#94A3B8", "😐"),
+#     ("longer",     "#64748B", "⏳"),
+# ]
+
+# VOICES = [
+#     ("af_bella",   "Bella",   "American Female", "🇺🇸", "en-us"),
+#     ("af_sarah",   "Sarah",   "American Female", "🇺🇸", "en-us"),
+#     ("am_adam",    "Adam",    "American Male",   "🇺🇸", "en-us"),
+#     ("am_michael", "Michael", "American Male",   "🇺🇸", "en-us"),
+#     ("bf_emma",    "Emma",    "British Female",  "🇬🇧", "en-gb"),
+#     ("bm_george",  "George",  "British Male",    "🇬🇧", "en-gb"),
+#     ("hf_alpha",   "Alpha",   "Hindi Female",    "🇮🇳", "hi"),
+#     ("hf_beta",    "Beta",    "Hindi Female",    "🇮🇳", "hi"),
+#     ("hm_omega",   "Omega",   "Hindi Male",      "🇮🇳", "hi"),
+#     ("hm_psi",     "Psi",     "Hindi Male",      "🇮🇳", "hi"),
+# ]
+
+# EXAMPLES = [
+#     ("😄 Good News",  "I just found out I got the job! [happy] I cannot believe it, this is amazing! [excited] We have to celebrate tonight!"),
+#     ("😢 Heartbreak", "Everything was going so well. [sad] But then, it all fell apart. [crying] I don't know what to do anymore."),
+#     ("😱 Suspense",   "Something doesn't feel right. [panicky] Wait... did you hear that? [whisper] Don't make a sound."),
+#     ("😠 Rant",       "I told you this would happen! [angry] Nobody listens! [frustrated] Next time, just trust me!"),
+#     ("🌙 Bedtime",    "[sleepy] It's getting late... [slow] Time to rest now... [whisper] Goodnight everyone."),
+#     ("🎭 Comedy",     "So I walked into the meeting. [normal] Completely forgot my pants. [surprise] Everyone stared. [curious] Nobody said a word."),
+# ]
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  SESSION STATE
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# if "script" not in st.session_state:
+#     st.session_state.script = "[happy] Hello! Welcome to Orpheus TTS Studio. Let's create something amazing."
+# if "pending_tag" not in st.session_state:
+#     st.session_state.pending_tag = None
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  HEADER
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# st.markdown("""
+# <div style="display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid #22252F;margin-bottom:22px;">
+#   <div style="width:46px;height:46px;background:linear-gradient(135deg,#6C63FF,#A09BFF);
+#               border-radius:12px;display:flex;align-items:center;justify-content:center;
+#               font-size:22px;flex-shrink:0;box-shadow:0 4px 16px rgba(108,99,255,0.35);">🎙️</div>
+#   <div>
+#     <div style="font-size:24px;font-weight:700;color:#F0F0F5;letter-spacing:-0.3px;line-height:1.2;">Orpheus TTS Studio</div>
+#     <div style="font-size:12px;color:#5A5A70;font-family:'JetBrains Mono',monospace;margin-top:1px;letter-spacing:0.5px;">
+#       KOKORO ONNX &nbsp;·&nbsp; EMOTION-AWARE SPEECH SYNTHESIS
+#     </div>
+#   </div>
+# </div>
+# """, unsafe_allow_html=True)
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  LAYOUT
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# left, right = st.columns([3, 2], gap="large")
+
+# # ╔══════════════════════════════════════╗
+# # ║  LEFT — Editor + Emotions            ║
+# # ╚══════════════════════════════════════╝
+# with left:
+
+#     # ── Rich editor ──────────────────────────────────────────────────────────
+#     emo_color_js = "{" + ",".join([f'"{e[0]}":"{e[1]}"' for e in ALL_EMOTIONS]) + "}"
+#     pending_js   = f'"{st.session_state.pending_tag}"' if st.session_state.pending_tag else "null"
+
+#     EDITOR_HTML = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+# <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+# <style>
+# *{{box-sizing:border-box;margin:0;padding:0;}}
+# body{{background:transparent;font-family:'JetBrains Mono',monospace;}}
+
+# .shell{{
+#   border:1.5px solid #2E3140;
+#   border-radius:12px;
+#   overflow:hidden;
+#   background:#161820;
+#   transition:border-color .2s,box-shadow .2s;
+# }}
+# .shell.active{{
+#   border-color:#6C63FF;
+#   box-shadow:0 0 0 3px rgba(108,99,255,.12),0 8px 30px rgba(0,0,0,.4);
+# }}
+
+# /* toolbar */
+# .tbar{{
+#   background:#1A1D26;
+#   border-bottom:1px solid #22252F;
+#   padding:9px 14px;
+#   display:flex;align-items:center;gap:8px;
+# }}
+# .tbar-dot{{width:11px;height:11px;border-radius:50%;}}
+# .tbar-title{{
+#   flex:1;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;
+#   color:#40405A;margin-left:6px;
+# }}
+# .tbar-stats{{display:flex;gap:16px;}}
+# .stat{{font-size:11px;color:#40405A;}}
+# .stat b{{color:#6C63FF;}}
+
+# /* editor area */
+# .ebody{{display:flex;}}
+# .lnums{{
+#   background:#12141C;
+#   border-right:1px solid #1E2028;
+#   padding:14px 10px 14px 12px;
+#   min-width:38px;text-align:right;
+#   font-size:12px;line-height:1.8;
+#   color:#30304A;user-select:none;
+#   overflow:hidden;
+# }}
+# #ed{{
+#   flex:1;
+#   padding:14px 16px;
+#   min-height:230px;max-height:320px;
+#   overflow-y:auto;
+#   font-family:'JetBrains Mono',monospace;
+#   font-size:13.5px;line-height:1.8;
+#   color:#E0E0EE;
+#   outline:none;
+#   white-space:pre-wrap;word-break:break-word;
+#   background:#161820;
+#   caret-color:#A09BFF;
+# }}
+# #ed:empty::before{{
+#   content:'Type your script here… click emotion buttons below to insert tags inline.';
+#   color:#2A2A40;pointer-events:none;
+# }}
+# .etag{{
+#   display:inline;
+#   border-radius:5px;
+#   padding:1px 4px;
+#   font-size:12px;font-weight:500;
+#   cursor:default;user-select:none;
+#   margin:0 1px;
+# }}
+
+# /* status bar */
+# .sbar{{
+#   background:#12141C;
+#   border-top:1px solid #1E2028;
+#   padding:5px 14px;
+#   display:flex;gap:16px;
+#   font-size:11px;color:#30304A;
+# }}
+# .s-ready{{color:#6C63FF;}}
+# #cur{{color:#3A3A58;}}
+
+# #ed::-webkit-scrollbar{{width:4px;}}
+# #ed::-webkit-scrollbar-track{{background:#12141C;}}
+# #ed::-webkit-scrollbar-thumb{{background:#2A2D3A;border-radius:3px;}}
+# </style></head><body>
+
+# <div class="shell" id="shell">
+#   <div class="tbar">
+#     <div class="tbar-dot" style="background:#FF5F57"></div>
+#     <div class="tbar-dot" style="background:#FEBC2E"></div>
+#     <div class="tbar-dot" style="background:#28C840"></div>
+#     <span class="tbar-title">Script Editor</span>
+#     <div class="tbar-stats">
+#       <span class="stat"><b id="wc">0</b> words</span>
+#       <span class="stat"><b id="cc">0</b> chars</span>
+#       <span class="stat"><b id="tc" style="color:#F59E0B">0</b> tags</span>
+#     </div>
+#   </div>
+
+#   <div class="ebody">
+#     <div class="lnums" id="lnums">1</div>
+#     <div id="ed" contenteditable="true" spellcheck="true"></div>
+#   </div>
+
+#   <div class="sbar">
+#     <span class="s-ready">● ready</span>
+#     <span id="cur">Ln 1, Col 1</span>
+#   </div>
+# </div>
+
+# <textarea id="sync" style="display:none"></textarea>
+
+# <script>
+# const COLORS = {emo_color_js};
+# const ed=document.getElementById('ed'),sync=document.getElementById('sync'),
+#       shell=document.getElementById('shell'),lnums=document.getElementById('lnums');
+
+# function render(text){{
+#   const parts=text.split(/(\[[a-z]+\])/gi);
+#   ed.innerHTML='';
+#   parts.forEach(p=>{{
+#     const m=p.match(/^\[([a-z]+)\]$/i);
+#     if(m){{
+#       const tag=m[1].toLowerCase(),col=COLORS[tag]||'#94A3B8';
+#       const sp=document.createElement('span');
+#       sp.className='etag';sp.contentEditable='false';sp.dataset.tag=tag;
+#       sp.style.cssText=`background:${{col}}22;color:${{col}};border:1px solid ${{col}}55;`;
+#       sp.textContent='['+tag+']';
+#       ed.appendChild(sp);
+#     }}else if(p) ed.appendChild(document.createTextNode(p));
+#   }});
+#   updateLnums();
+# }}
+
+# function extract(){{
+#   let t='';
+#   ed.childNodes.forEach(n=>{{
+#     if(n.nodeType===3) t+=n.textContent;
+#     else if(n.classList?.contains('etag')) t+='['+n.dataset.tag+']';
+#     else t+=(n.innerText||n.textContent||'');
+#   }});
+#   return t;
+# }}
+
+# function updateLnums(){{
+#   const lines=Math.max(1,extract().split('\\n').length);
+#   lnums.innerHTML=Array.from({{length:lines}},(_,i)=>i+1).join('<br>');
+# }}
+
+# function updateStats(){{
+#   const t=extract();
+#   const w=t.trim()?t.trim().split(/\\s+/).length:0;
+#   const tags=(t.match(/\\[[a-z]+\\]/gi)||[]).length;
+#   document.getElementById('wc').textContent=w;
+#   document.getElementById('cc').textContent=t.length;
+#   document.getElementById('tc').textContent=tags;
+#   sync.value=t;sync.dispatchEvent(new Event('change'));
+#   window.parent.postMessage({{type:'tts_upd',text:t}},'*');
+#   updateLnums();
+# }}
+
+# function updateCursor(){{
+#   try{{
+#     const sel=window.getSelection();if(!sel.rangeCount)return;
+#     const r=sel.getRangeAt(0).cloneRange();
+#     r.selectNodeContents(ed);
+#     r.setEnd(sel.getRangeAt(0).endContainer,sel.getRangeAt(0).endOffset);
+#     const lines=r.toString().split('\\n');
+#     document.getElementById('cur').textContent='Ln '+lines.length+', Col '+(lines[lines.length-1].length+1);
+#   }}catch(e){{}}
+# }}
+
+# function insertTag(tag){{
+#   ed.focus();
+#   const col=COLORS[tag]||'#94A3B8';
+#   const sp=document.createElement('span');
+#   sp.className='etag';sp.contentEditable='false';sp.dataset.tag=tag;
+#   sp.style.cssText=`background:${{col}}22;color:${{col}};border:1px solid ${{col}}55;`;
+#   sp.textContent='['+tag+']';
+#   const sel=window.getSelection();
+#   if(sel.rangeCount){{
+#     const range=sel.getRangeAt(0);range.deleteContents();
+#     const b=document.createTextNode(' '),a=document.createTextNode(' ');
+#     range.insertNode(a);range.insertNode(sp);range.insertNode(b);
+#     const nr=document.createRange();nr.setStartAfter(a);nr.collapse(true);
+#     sel.removeAllRanges();sel.addRange(nr);
+#   }}else{{
+#     ed.appendChild(document.createTextNode(' '));
+#     ed.appendChild(sp);
+#     ed.appendChild(document.createTextNode(' '));
+#   }}
+#   updateStats();
+# }}
+
+# ed.addEventListener('input',updateStats);
+# ed.addEventListener('keyup',updateCursor);
+# ed.addEventListener('mouseup',updateCursor);
+# ed.addEventListener('focus',()=>shell.classList.add('active'));
+# ed.addEventListener('blur', ()=>{{shell.classList.remove('active');updateStats();}});
+# ed.addEventListener('keydown',e=>{{
+#   if(e.key==='Backspace'){{
+#     const sel=window.getSelection();if(!sel.rangeCount)return;
+#     const range=sel.getRangeAt(0);if(!range.collapsed)return;
+#     let prev=range.startContainer.previousSibling;
+#     if(!prev&&range.startOffset===0) prev=range.startContainer.parentNode?.previousSibling;
+#     if(prev?.classList?.contains('etag')){{e.preventDefault();prev.remove();updateStats();}}
+#   }}
+# }});
+
+# window.addEventListener('message',e=>{{
+#   if(!e.data)return;
+#   if(e.data.type==='ins_tag') insertTag(e.data.tag);
+#   if(e.data.type==='set_txt'){{render(e.data.text);updateStats();}}
+# }});
+
+# render({repr(st.session_state.script)});
+# updateStats();
+# const PENDING={pending_js};
+# if(PENDING) setTimeout(()=>insertTag(PENDING),80);
+# </script></body></html>"""
+
+#     st.markdown('<p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-bottom:8px;">✏️ Script Editor</p>', unsafe_allow_html=True)
+#     components.html(EDITOR_HTML, height=390, scrolling=False)
+
+#     # Invisible sync textarea
+#     if "sync_area" not in st.session_state:
+#       st.session_state["sync_area"] = st.session_state.script
+#     synced = st.text_area(
+#     "_sync_",
+#     # value=st.session_state.script,
+#     key="sync_area",
+#     height=200,
+#     label_visibility="visible",
+#     help="Type here — this is what gets synthesized"
+#     )
+#     st.session_state.script = st.session_state["sync_area"]
+#     # ── Emotion Palette ───────────────────────────────────────────────────────
+#     st.markdown("""
+#     <div style="margin-top:20px;margin-bottom:10px;">
+#       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-bottom:4px;">🎭 Emotion Tags</p>
+#       <p style="font-size:12px;color:#40405A;margin:0;">Click a tag to insert it at your cursor position. Tags stay active until the next one.</p>
+#     </div>
+#     """, unsafe_allow_html=True)
+
+#     # Render 5 per row
+#     for row_start in range(0, len(ALL_EMOTIONS), 5):
+#         row = ALL_EMOTIONS[row_start:row_start+5]
+#         cols = st.columns(5)
+#         for j, (emo, color, icon) in enumerate(row):
+#             with cols[j]:
+#                 # Inject per-button style using a wrapper class
+#                 btn_id = f"ebtn_{emo}"
+#                 st.markdown(f"""
+#                 <style>
+#                 div[data-testid="stButton"] button[kind="secondary"]#btn_{emo},
+#                 .btn-wrap-{emo} .stButton > button {{
+#                     background: {color}12 !important;
+#                     border-color: {color}40 !important;
+#                     color: {color} !important;
+#                     font-size: 12px !important;
+#                     padding: 7px 6px !important;
+#                     font-family: 'JetBrains Mono', monospace !important;
+#                 }}
+#                 .btn-wrap-{emo} .stButton > button:hover {{
+#                     background: {color}25 !important;
+#                     border-color: {color}99 !important;
+#                     box-shadow: 0 3px 10px {color}30 !important;
+#                 }}
+#                 </style>
+#                 <div class="btn-wrap-{emo}">
+#                 """, unsafe_allow_html=True)
+#                 pressed = st.button(f"{icon} {emo}", key=f"emo_{emo}")
+#                 st.markdown("</div>", unsafe_allow_html=True)
+#                 if pressed:
+
+#                     st.session_state.pending_tag = emo
+#                     st.rerun()
+
+#     st.session_state.pending_tag = None
+
+#     # ── Example Scripts ───────────────────────────────────────────────────────
+#     st.markdown('<p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-top:20px;margin-bottom:8px;">⚡ Quick Examples</p>', unsafe_allow_html=True)
+#     ex_cols = st.columns(3)
+#     for i, (label, script) in enumerate(EXAMPLES):
+#         with ex_cols[i % 3]:
+#             if st.button(label, key=f"ex_{i}"):
+#                 st.session_state.script = script
+#                 st.session_state["sync_area"] = script
+#                 st.rerun()
+
+# # ╔══════════════════════════════════════╗
+# # ║  RIGHT — Settings                    ║
+# # ╚══════════════════════════════════════╝
+# with right:
+
+#     # ── Voice Selector ────────────────────────────────────────────────────────
+#     st.markdown("""
+#     <div style="background:#1A1D26;border:1.5px solid #2E3140;border-radius:14px;padding:20px 20px 16px;margin-bottom:16px;">
+#       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 14px;">🎤 Voice</p>
+#     """, unsafe_allow_html=True)
+
+#     # Group voices for a nicer display
+#     voice_labels = [f"{v[3]} {v[1]}  —  {v[2]}" for v in VOICES]
+#     sel_idx = st.selectbox("Voice", range(len(VOICES)), format_func=lambda i: voice_labels[i], label_visibility="collapsed")
+#     sel = VOICES[sel_idx]
+
+#     # Show selected voice detail card
+#     st.markdown(f"""
+#     <div style="background:#111318;border:1px solid #22252F;border-radius:10px;
+#                 padding:13px 15px;margin-top:12px;display:flex;align-items:center;gap:12px;">
+#       <div style="font-size:28px;line-height:1;">{sel[3]}</div>
+#       <div>
+#         <div style="font-size:15px;font-weight:600;color:#F0F0F5;">{sel[1]}</div>
+#         <div style="font-size:12px;color:#5A5A70;margin-top:2px;">{sel[2]} &nbsp;·&nbsp;
+#           <span style="color:#6C63FF;font-family:'JetBrains Mono',monospace;">{sel[4]}</span>
+#         </div>
+#       </div>
+#     </div>
+#     """, unsafe_allow_html=True)
+
+#     st.markdown("</div>", unsafe_allow_html=True)
+
+#     # ── Speed ─────────────────────────────────────────────────────────────────
+#     st.markdown("""
+#     <div style="background:#1A1D26;border:1.5px solid #2E3140;border-radius:14px;padding:20px 20px 16px;margin-bottom:16px;">
+#       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 12px;">⏱ Speed</p>
+#     """, unsafe_allow_html=True)
+
+#     speed = st.slider("Speed", 0.5, 2.0, 1.0, 0.05, label_visibility="collapsed")
+#     pct   = int((speed - 0.5) / 1.5 * 100)
+#     sc    = "#60A5FA" if speed < 0.85 else "#6C63FF" if speed <= 1.15 else "#F59E0B" if speed <= 1.6 else "#F87171"
+#     label = "Slow" if speed < 0.85 else "Normal" if speed <= 1.15 else "Fast" if speed <= 1.6 else "Very Fast"
+
+#     st.markdown(f"""
+#     <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px 15px;margin-top:4px;">
+#       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+#         <span style="font-size:12px;color:#5A5A70;">{label}</span>
+#         <span style="font-size:18px;font-weight:700;color:{sc};font-family:'JetBrains Mono',monospace;">{speed:.2f}×</span>
+#       </div>
+#       <div style="background:#22252F;border-radius:4px;height:5px;overflow:hidden;">
+#         <div style="background:linear-gradient(90deg,#6C63FF,{sc});width:{pct}%;height:100%;border-radius:4px;"></div>
+#       </div>
+#     </div>
+#     """, unsafe_allow_html=True)
+
+#     st.markdown("</div>", unsafe_allow_html=True)
+
+#     # ── Script Stats ──────────────────────────────────────────────────────────
+#     txt  = st.session_state.script
+#     wc   = len(txt.split()) if txt.strip() else 0
+#     cc   = len(txt)
+#     tc   = txt.count("[")
+#     prev = (txt[:110] + "…") if len(txt) > 110 else txt
+
+#     st.markdown(f"""
+#     <div style="background:#1A1D26;border:1.5px solid #2E3140;border-radius:14px;padding:20px 20px 16px;margin-bottom:16px;">
+#       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 14px;">📊 Script Info</p>
+#       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+#         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
+#           <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{wc}</div>
+#           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Words</div>
+#         </div>
+#         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
+#           <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{cc}</div>
+#           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Chars</div>
+#         </div>
+#         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
+#           <div style="font-size:22px;font-weight:700;color:#F59E0B;font-family:'JetBrains Mono',monospace;">{tc}</div>
+#           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Tags</div>
+#         </div>
+#       </div>
+#       <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:11px 13px;
+#                   font-size:12px;color:#4A4A62;font-family:'JetBrains Mono',monospace;line-height:1.6;
+#                   min-height:38px;word-break:break-word;">
+#         {prev if prev.strip() else '<span style="color:#22252F">No text yet…</span>'}
+#       </div>
+#     </div>
+#     """, unsafe_allow_html=True)
+
+#     # ── Tag Reference ─────────────────────────────────────────────────────────
+#     st.markdown("""
+#     <div style="background:#1A1D26;border:1.5px solid #2E3140;border-radius:14px;padding:20px 20px 16px;">
+#       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 14px;">📖 Tag Reference</p>
+#     """, unsafe_allow_html=True)
+
+#     groups = [
+#         ("😊 Positive",  ["happy","excited","surprise"]),
+#         ("😢 Sad",       ["sad","crying"]),
+#         ("😠 Intense",   ["angry","shout","frustrated","panicky"]),
+#         ("🤫 Soft",      ["whisper","sleepy","slow"]),
+#         ("🎵 Pitch",     ["deep","high","fast"]),
+#         ("😐 Neutral",   ["normal","longer","disgust","curious"]),
+#     ]
+#     emo_map = {e[0]: (e[1], e[2]) for e in ALL_EMOTIONS}
+
+#     for glabel, names in groups:
+#         chips = "".join([
+#             f'<span style="background:{emo_map[n][0]}16;border:1px solid {emo_map[n][0]}45;'
+#             f'color:{emo_map[n][0]};border-radius:6px;padding:3px 10px;font-size:11px;'
+#             f'font-family:JetBrains Mono,monospace;margin:2px 2px 2px 0;display:inline-block;">'
+#             f'{emo_map[n][1]} {n}</span>'
+#             for n in names if n in emo_map
+#         ])
+#         st.markdown(f"""
+#         <div style="margin-bottom:11px;">
+#           <div style="font-size:11px;color:#40405A;margin-bottom:5px;font-weight:500;">{glabel}</div>
+#           <div style="line-height:2;">{chips}</div>
+#         </div>""", unsafe_allow_html=True)
+
+#     st.markdown("</div>", unsafe_allow_html=True)
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  GENERATE BUTTON
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# st.markdown("<hr/>", unsafe_allow_html=True)
+
+# g1, g2, g3 = st.columns([1, 2, 1])
+# with g2:
+#     st.markdown("""
+#     <style>
+#     div[data-testid="column"]:nth-child(2) > div:first-child > div:first-child .stButton > button {
+#         background: linear-gradient(135deg,#6C63FF,#9B93FF) !important;
+#         color: #fff !important;
+#         font-size: 16px !important;
+#         font-weight: 700 !important;
+#         padding: 15px 32px !important;
+#         border-radius: 12px !important;
+#         border: none !important;
+#         box-shadow: 0 4px 22px rgba(108,99,255,0.4) !important;
+#         letter-spacing: 0.3px !important;
+#     }
+#     div[data-testid="column"]:nth-child(2) > div:first-child > div:first-child .stButton > button:hover {
+#         box-shadow: 0 8px 32px rgba(108,99,255,0.55) !important;
+#         transform: translateY(-2px) !important;
+#     }
+#     </style>
+#     """, unsafe_allow_html=True)
+#     generate = st.button("🎙️  Generate Speech", key="gen_btn")
+
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# #  GENERATION LOGIC
+# # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# if generate:
+#     final = st.session_state.script.strip()
+#     if not final:
+#         st.error("⚠️ Write some text in the editor first.")
+#     else:
+#         try:
+#             from kokoro_onnx import Kokoro
+#             onnx_p, voc_p = "kokoro-v1.0.onnx", "voices-v1.0.bin"
+#             if not os.path.exists(onnx_p) or not os.path.exists(voc_p):
+#                 st.error("**Model files not found.** Place `kokoro-v1.0.onnx` and `voices-v1.0.bin` in the same folder as this script.")
+#             else:
+#                 r1, r2, r3 = st.columns([1, 2, 1])
+#                 with r2:
+#                     with st.spinner("🎵 Synthesising audio…"):
+#                         kokoro = Kokoro(onnx_p, voc_p)
+#                         samples, sr = kokoro.create(final, voice=sel[0], speed=speed, lang=sel[4])
+#                         buf = io.BytesIO()
+#                         sf.write(buf, samples, sr, format="WAV")
+#                         buf.seek(0)
+
+#                     st.markdown("""
+#                     <div style="background:#0F2A1A;border:1px solid #22863a55;border-radius:12px;
+#                                 padding:14px 16px;margin-bottom:12px;">
+#                       <div style="color:#4ADE80;font-size:13px;font-weight:600;margin-bottom:10px;">✅ Audio generated</div>
+#                     """, unsafe_allow_html=True)
+#                     st.audio(buf, format="audio/wav")
+#                     st.markdown("</div>", unsafe_allow_html=True)
+#                     st.download_button("⬇️  Download WAV", buf.getvalue(), "orpheus_output.wav", "audio/wav")
+
+#         except ImportError:
+#             st.error("**kokoro-onnx not installed.** Run: `pip install kokoro-onnx soundfile`")
+#         except Exception as e:
+#             st.error(f"**Error:** {e}")
+
+# # ── Footer ────────────────────────────────────────────────────────────────────
+# st.markdown("""
+# <div style="text-align:center;margin-top:2.5rem;padding-top:1rem;border-top:1px solid #1A1D26;">
+#   <span style="font-size:11px;color:#22252F;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">
+#     ORPHEUS TTS STUDIO &nbsp;·&nbsp; KOKORO ONNX &nbsp;·&nbsp; LOCAL WINDOWS BUILD
+#   </span>
+# </div>
+# """, unsafe_allow_html=True)
+
+
 import streamlit as st
 import streamlit.components.v1 as components
 import soundfile as sf
@@ -1027,7 +1734,6 @@ download_file(
     "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx",
     "kokoro-v1.0.onnx"
 )
-
 download_file(
     "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin",
     "voices-v1.0.bin"
@@ -1035,14 +1741,10 @@ download_file(
 
 st.set_page_config(page_title="Orpheus TTS Studio", page_icon="🎙️", layout="wide", initial_sidebar_state="collapsed")
 
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#  GLOBAL CSS  —  charcoal/white high-contrast theme
-# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-/* ── Base ── */
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif !important;
     background: #111318 !important;
@@ -1054,8 +1756,29 @@ html, body, [class*="css"] {
 }
 section[data-testid="stSidebar"], #MainMenu, footer, header { display:none !important; visibility:hidden !important; }
 
-/* ── Hide sync textarea ── */
-div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stTextArea"]) { display:none !important; }
+/* ── Textarea ── */
+.stTextArea > label {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 1.5px !important;
+    text-transform: uppercase !important;
+    color: #5A5A70 !important;
+}
+.stTextArea textarea {
+    background: #161820 !important;
+    border: 1.5px solid #2E3140 !important;
+    border-radius: 10px !important;
+    color: #E0E0EE !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 13.5px !important;
+    line-height: 1.8 !important;
+    caret-color: #A09BFF !important;
+    resize: vertical !important;
+}
+.stTextArea textarea:focus {
+    border-color: #6C63FF !important;
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15) !important;
+}
 
 /* ── Selectbox ── */
 .stSelectbox > div > div {
@@ -1089,7 +1812,7 @@ div[data-baseweb="slider"] > div > div > div:first-child {
     background: linear-gradient(90deg, #6C63FF, #A09BFF) !important;
 }
 
-/* ── All buttons base ── */
+/* ── Buttons ── */
 .stButton > button {
     background: #1E2028 !important;
     color: #C8C8D8 !important;
@@ -1111,7 +1834,6 @@ div[data-baseweb="slider"] > div > div > div:first-child {
 }
 .stButton > button:active { transform: translateY(0) !important; }
 
-/* ── Download button ── */
 .stDownloadButton > button {
     background: #1E2028 !important;
     border: 1.5px solid #2E3140 !important;
@@ -1127,11 +1849,9 @@ div[data-baseweb="slider"] > div > div > div:first-child {
     background: #252830 !important;
 }
 
-/* ── Audio player ── */
 .stAudio { background: #1E2028 !important; border-radius: 12px !important; padding: 12px !important; }
 audio { width: 100%; border-radius: 8px; }
 
-/* ── Alerts ── */
 .stSuccess > div { background: #0F2A1A !important; border: 1px solid #22863a !important; border-radius:10px !important; color:#4ade80 !important; }
 .stError > div   { background: #2A0F0F !important; border: 1px solid #7f1d1d !important; border-radius:10px !important; color:#f87171 !important; }
 
@@ -1189,8 +1909,8 @@ EXAMPLES = [
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #  SESSION STATE
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-if "script" not in st.session_state:
-    st.session_state.script = "[happy] Hello! Welcome to Orpheus TTS Studio. Let's create something amazing."
+if "sync_area" not in st.session_state:
+    st.session_state["sync_area"] = "[happy] Hello! Welcome to Orpheus TTS Studio. Let's create something amazing."
 if "pending_tag" not in st.session_state:
     st.session_state.pending_tag = None
 
@@ -1216,264 +1936,55 @@ st.markdown("""
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 left, right = st.columns([3, 2], gap="large")
 
-# ╔══════════════════════════════════════╗
-# ║  LEFT — Editor + Emotions            ║
-# ╚══════════════════════════════════════╝
 with left:
 
-    # ── Rich editor ──────────────────────────────────────────────────────────
-    emo_color_js = "{" + ",".join([f'"{e[0]}":"{e[1]}"' for e in ALL_EMOTIONS]) + "}"
-    pending_js   = f'"{st.session_state.pending_tag}"' if st.session_state.pending_tag else "null"
+    # ── Script textarea (source of truth) ─────────────────────────────────────
+    st.text_area(
+        "✏️ Script",
+        key="sync_area",
+        height=220,
+        help="Type your script here. Use [emotion] tags like [happy], [whisper], [angry] etc.",
+        placeholder="Type your script here… e.g. [happy] Hello! Welcome to Orpheus TTS Studio.",
+    )
 
-    EDITOR_HTML = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{{box-sizing:border-box;margin:0;padding:0;}}
-body{{background:transparent;font-family:'JetBrains Mono',monospace;}}
+    # Pending tag insertion — appends tag text to the textarea value
+    if st.session_state.pending_tag:
+        st.session_state["sync_area"] = st.session_state["sync_area"] + f" [{st.session_state.pending_tag}] "
+        st.session_state.pending_tag = None
+        st.rerun()
 
-.shell{{
-  border:1.5px solid #2E3140;
-  border-radius:12px;
-  overflow:hidden;
-  background:#161820;
-  transition:border-color .2s,box-shadow .2s;
-}}
-.shell.active{{
-  border-color:#6C63FF;
-  box-shadow:0 0 0 3px rgba(108,99,255,.12),0 8px 30px rgba(0,0,0,.4);
-}}
+    # ── Token preview (shows what will be synthesized) ────────────────────────
+    current_text = st.session_state["sync_area"]
+    wc  = len(current_text.split()) if current_text.strip() else 0
+    cc  = len(current_text)
+    tc  = current_text.count("[")
 
-/* toolbar */
-.tbar{{
-  background:#1A1D26;
-  border-bottom:1px solid #22252F;
-  padding:9px 14px;
-  display:flex;align-items:center;gap:8px;
-}}
-.tbar-dot{{width:11px;height:11px;border-radius:50%;}}
-.tbar-title{{
-  flex:1;font-size:11px;letter-spacing:1.8px;text-transform:uppercase;
-  color:#40405A;margin-left:6px;
-}}
-.tbar-stats{{display:flex;gap:16px;}}
-.stat{{font-size:11px;color:#40405A;}}
-.stat b{{color:#6C63FF;}}
-
-/* editor area */
-.ebody{{display:flex;}}
-.lnums{{
-  background:#12141C;
-  border-right:1px solid #1E2028;
-  padding:14px 10px 14px 12px;
-  min-width:38px;text-align:right;
-  font-size:12px;line-height:1.8;
-  color:#30304A;user-select:none;
-  overflow:hidden;
-}}
-#ed{{
-  flex:1;
-  padding:14px 16px;
-  min-height:230px;max-height:320px;
-  overflow-y:auto;
-  font-family:'JetBrains Mono',monospace;
-  font-size:13.5px;line-height:1.8;
-  color:#E0E0EE;
-  outline:none;
-  white-space:pre-wrap;word-break:break-word;
-  background:#161820;
-  caret-color:#A09BFF;
-}}
-#ed:empty::before{{
-  content:'Type your script here… click emotion buttons below to insert tags inline.';
-  color:#2A2A40;pointer-events:none;
-}}
-.etag{{
-  display:inline;
-  border-radius:5px;
-  padding:1px 4px;
-  font-size:12px;font-weight:500;
-  cursor:default;user-select:none;
-  margin:0 1px;
-}}
-
-/* status bar */
-.sbar{{
-  background:#12141C;
-  border-top:1px solid #1E2028;
-  padding:5px 14px;
-  display:flex;gap:16px;
-  font-size:11px;color:#30304A;
-}}
-.s-ready{{color:#6C63FF;}}
-#cur{{color:#3A3A58;}}
-
-#ed::-webkit-scrollbar{{width:4px;}}
-#ed::-webkit-scrollbar-track{{background:#12141C;}}
-#ed::-webkit-scrollbar-thumb{{background:#2A2D3A;border-radius:3px;}}
-</style></head><body>
-
-<div class="shell" id="shell">
-  <div class="tbar">
-    <div class="tbar-dot" style="background:#FF5F57"></div>
-    <div class="tbar-dot" style="background:#FEBC2E"></div>
-    <div class="tbar-dot" style="background:#28C840"></div>
-    <span class="tbar-title">Script Editor</span>
-    <div class="tbar-stats">
-      <span class="stat"><b id="wc">0</b> words</span>
-      <span class="stat"><b id="cc">0</b> chars</span>
-      <span class="stat"><b id="tc" style="color:#F59E0B">0</b> tags</span>
+    st.markdown(f"""
+    <div style="background:#1A1D26;border:1px solid #2E3140;border-radius:10px;
+                padding:10px 14px;margin-top:8px;display:flex;gap:20px;">
+      <span style="font-size:12px;color:#5A5A70;font-family:'JetBrains Mono',monospace;">
+        <b style="color:#6C63FF;">{wc}</b> words &nbsp;·&nbsp;
+        <b style="color:#6C63FF;">{cc}</b> chars &nbsp;·&nbsp;
+        <b style="color:#F59E0B;">{tc}</b> tags
+      </span>
     </div>
-  </div>
-
-  <div class="ebody">
-    <div class="lnums" id="lnums">1</div>
-    <div id="ed" contenteditable="true" spellcheck="true"></div>
-  </div>
-
-  <div class="sbar">
-    <span class="s-ready">● ready</span>
-    <span id="cur">Ln 1, Col 1</span>
-  </div>
-</div>
-
-<textarea id="sync" style="display:none"></textarea>
-
-<script>
-const COLORS = {emo_color_js};
-const ed=document.getElementById('ed'),sync=document.getElementById('sync'),
-      shell=document.getElementById('shell'),lnums=document.getElementById('lnums');
-
-function render(text){{
-  const parts=text.split(/(\[[a-z]+\])/gi);
-  ed.innerHTML='';
-  parts.forEach(p=>{{
-    const m=p.match(/^\[([a-z]+)\]$/i);
-    if(m){{
-      const tag=m[1].toLowerCase(),col=COLORS[tag]||'#94A3B8';
-      const sp=document.createElement('span');
-      sp.className='etag';sp.contentEditable='false';sp.dataset.tag=tag;
-      sp.style.cssText=`background:${{col}}22;color:${{col}};border:1px solid ${{col}}55;`;
-      sp.textContent='['+tag+']';
-      ed.appendChild(sp);
-    }}else if(p) ed.appendChild(document.createTextNode(p));
-  }});
-  updateLnums();
-}}
-
-function extract(){{
-  let t='';
-  ed.childNodes.forEach(n=>{{
-    if(n.nodeType===3) t+=n.textContent;
-    else if(n.classList?.contains('etag')) t+='['+n.dataset.tag+']';
-    else t+=(n.innerText||n.textContent||'');
-  }});
-  return t;
-}}
-
-function updateLnums(){{
-  const lines=Math.max(1,extract().split('\\n').length);
-  lnums.innerHTML=Array.from({{length:lines}},(_,i)=>i+1).join('<br>');
-}}
-
-function updateStats(){{
-  const t=extract();
-  const w=t.trim()?t.trim().split(/\\s+/).length:0;
-  const tags=(t.match(/\\[[a-z]+\\]/gi)||[]).length;
-  document.getElementById('wc').textContent=w;
-  document.getElementById('cc').textContent=t.length;
-  document.getElementById('tc').textContent=tags;
-  sync.value=t;sync.dispatchEvent(new Event('change'));
-  window.parent.postMessage({{type:'tts_upd',text:t}},'*');
-  updateLnums();
-}}
-
-function updateCursor(){{
-  try{{
-    const sel=window.getSelection();if(!sel.rangeCount)return;
-    const r=sel.getRangeAt(0).cloneRange();
-    r.selectNodeContents(ed);
-    r.setEnd(sel.getRangeAt(0).endContainer,sel.getRangeAt(0).endOffset);
-    const lines=r.toString().split('\\n');
-    document.getElementById('cur').textContent='Ln '+lines.length+', Col '+(lines[lines.length-1].length+1);
-  }}catch(e){{}}
-}}
-
-function insertTag(tag){{
-  ed.focus();
-  const col=COLORS[tag]||'#94A3B8';
-  const sp=document.createElement('span');
-  sp.className='etag';sp.contentEditable='false';sp.dataset.tag=tag;
-  sp.style.cssText=`background:${{col}}22;color:${{col}};border:1px solid ${{col}}55;`;
-  sp.textContent='['+tag+']';
-  const sel=window.getSelection();
-  if(sel.rangeCount){{
-    const range=sel.getRangeAt(0);range.deleteContents();
-    const b=document.createTextNode(' '),a=document.createTextNode(' ');
-    range.insertNode(a);range.insertNode(sp);range.insertNode(b);
-    const nr=document.createRange();nr.setStartAfter(a);nr.collapse(true);
-    sel.removeAllRanges();sel.addRange(nr);
-  }}else{{
-    ed.appendChild(document.createTextNode(' '));
-    ed.appendChild(sp);
-    ed.appendChild(document.createTextNode(' '));
-  }}
-  updateStats();
-}}
-
-ed.addEventListener('input',updateStats);
-ed.addEventListener('keyup',updateCursor);
-ed.addEventListener('mouseup',updateCursor);
-ed.addEventListener('focus',()=>shell.classList.add('active'));
-ed.addEventListener('blur', ()=>{{shell.classList.remove('active');updateStats();}});
-ed.addEventListener('keydown',e=>{{
-  if(e.key==='Backspace'){{
-    const sel=window.getSelection();if(!sel.rangeCount)return;
-    const range=sel.getRangeAt(0);if(!range.collapsed)return;
-    let prev=range.startContainer.previousSibling;
-    if(!prev&&range.startOffset===0) prev=range.startContainer.parentNode?.previousSibling;
-    if(prev?.classList?.contains('etag')){{e.preventDefault();prev.remove();updateStats();}}
-  }}
-}});
-
-window.addEventListener('message',e=>{{
-  if(!e.data)return;
-  if(e.data.type==='ins_tag') insertTag(e.data.tag);
-  if(e.data.type==='set_txt'){{render(e.data.text);updateStats();}}
-}});
-
-render({repr(st.session_state.script)});
-updateStats();
-const PENDING={pending_js};
-if(PENDING) setTimeout(()=>insertTag(PENDING),80);
-</script></body></html>"""
-
-    st.markdown('<p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-bottom:8px;">✏️ Script Editor</p>', unsafe_allow_html=True)
-    components.html(EDITOR_HTML, height=390, scrolling=False)
-
-    # Invisible sync textarea
-    synced = st.text_area("_sync_", value=st.session_state.script, key="sync_area")
-    if synced is not None:
-        st.session_state.script = synced
+    """, unsafe_allow_html=True)
 
     # ── Emotion Palette ───────────────────────────────────────────────────────
     st.markdown("""
     <div style="margin-top:20px;margin-bottom:10px;">
       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-bottom:4px;">🎭 Emotion Tags</p>
-      <p style="font-size:12px;color:#40405A;margin:0;">Click a tag to insert it at your cursor position. Tags stay active until the next one.</p>
+      <p style="font-size:12px;color:#40405A;margin:0;">Click a tag to append it to your script.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Render 5 per row
     for row_start in range(0, len(ALL_EMOTIONS), 5):
         row = ALL_EMOTIONS[row_start:row_start+5]
         cols = st.columns(5)
         for j, (emo, color, icon) in enumerate(row):
             with cols[j]:
-                # Inject per-button style using a wrapper class
-                btn_id = f"ebtn_{emo}"
                 st.markdown(f"""
                 <style>
-                div[data-testid="stButton"] button[kind="secondary"]#btn_{emo},
                 .btn-wrap-{emo} .stButton > button {{
                     background: {color}12 !important;
                     border-color: {color}40 !important;
@@ -1490,14 +2001,10 @@ if(PENDING) setTimeout(()=>insertTag(PENDING),80);
                 </style>
                 <div class="btn-wrap-{emo}">
                 """, unsafe_allow_html=True)
-                pressed = st.button(f"{icon} {emo}", key=f"emo_{emo}")
-                st.markdown("</div>", unsafe_allow_html=True)
-                if pressed:
-
+                if st.button(f"{icon} {emo}", key=f"emo_{emo}"):
                     st.session_state.pending_tag = emo
                     st.rerun()
-
-    st.session_state.pending_tag = None
+                st.markdown("</div>", unsafe_allow_html=True)
 
     # ── Example Scripts ───────────────────────────────────────────────────────
     st.markdown('<p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin-top:20px;margin-bottom:8px;">⚡ Quick Examples</p>', unsafe_allow_html=True)
@@ -1505,12 +2012,12 @@ if(PENDING) setTimeout(()=>insertTag(PENDING),80);
     for i, (label, script) in enumerate(EXAMPLES):
         with ex_cols[i % 3]:
             if st.button(label, key=f"ex_{i}"):
-                st.session_state.script = script
+                st.session_state["sync_area"] = script
                 st.rerun()
 
-# ╔══════════════════════════════════════╗
-# ║  RIGHT — Settings                    ║
-# ╚══════════════════════════════════════╝
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  RIGHT — Settings
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 with right:
 
     # ── Voice Selector ────────────────────────────────────────────────────────
@@ -1519,12 +2026,10 @@ with right:
       <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 14px;">🎤 Voice</p>
     """, unsafe_allow_html=True)
 
-    # Group voices for a nicer display
     voice_labels = [f"{v[3]} {v[1]}  —  {v[2]}" for v in VOICES]
     sel_idx = st.selectbox("Voice", range(len(VOICES)), format_func=lambda i: voice_labels[i], label_visibility="collapsed")
     sel = VOICES[sel_idx]
 
-    # Show selected voice detail card
     st.markdown(f"""
     <div style="background:#111318;border:1px solid #22252F;border-radius:10px;
                 padding:13px 15px;margin-top:12px;display:flex;align-items:center;gap:12px;">
@@ -1537,7 +2042,6 @@ with right:
       </div>
     </div>
     """, unsafe_allow_html=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
 
     # ── Speed ─────────────────────────────────────────────────────────────────
@@ -1549,12 +2053,12 @@ with right:
     speed = st.slider("Speed", 0.5, 2.0, 1.0, 0.05, label_visibility="collapsed")
     pct   = int((speed - 0.5) / 1.5 * 100)
     sc    = "#60A5FA" if speed < 0.85 else "#6C63FF" if speed <= 1.15 else "#F59E0B" if speed <= 1.6 else "#F87171"
-    label = "Slow" if speed < 0.85 else "Normal" if speed <= 1.15 else "Fast" if speed <= 1.6 else "Very Fast"
+    spd_label = "Slow" if speed < 0.85 else "Normal" if speed <= 1.15 else "Fast" if speed <= 1.6 else "Very Fast"
 
     st.markdown(f"""
     <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px 15px;margin-top:4px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span style="font-size:12px;color:#5A5A70;">{label}</span>
+        <span style="font-size:12px;color:#5A5A70;">{spd_label}</span>
         <span style="font-size:18px;font-weight:700;color:{sc};font-family:'JetBrains Mono',monospace;">{speed:.2f}×</span>
       </div>
       <div style="background:#22252F;border-radius:4px;height:5px;overflow:hidden;">
@@ -1562,30 +2066,26 @@ with right:
       </div>
     </div>
     """, unsafe_allow_html=True)
-
     st.markdown("</div>", unsafe_allow_html=True)
 
-    # ── Script Stats ──────────────────────────────────────────────────────────
-    txt  = st.session_state.script
-    wc   = len(txt.split()) if txt.strip() else 0
-    cc   = len(txt)
-    tc   = txt.count("[")
+    # ── Script preview ────────────────────────────────────────────────────────
+    txt  = st.session_state["sync_area"]
     prev = (txt[:110] + "…") if len(txt) > 110 else txt
 
     st.markdown(f"""
     <div style="background:#1A1D26;border:1.5px solid #2E3140;border-radius:14px;padding:20px 20px 16px;margin-bottom:16px;">
-      <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 14px;">📊 Script Info</p>
+      <p style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#5A5A70;margin:0 0 10px;">📊 Script Info</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
-          <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{wc}</div>
+          <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{len(txt.split()) if txt.strip() else 0}</div>
           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Words</div>
         </div>
         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
-          <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{cc}</div>
+          <div style="font-size:22px;font-weight:700;color:#6C63FF;font-family:'JetBrains Mono',monospace;">{len(txt)}</div>
           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Chars</div>
         </div>
         <div style="background:#111318;border:1px solid #22252F;border-radius:10px;padding:13px;text-align:center;">
-          <div style="font-size:22px;font-weight:700;color:#F59E0B;font-family:'JetBrains Mono',monospace;">{tc}</div>
+          <div style="font-size:22px;font-weight:700;color:#F59E0B;font-family:'JetBrains Mono',monospace;">{txt.count("[")}</div>
           <div style="font-size:10px;color:#40405A;margin-top:3px;letter-spacing:1px;text-transform:uppercase;">Tags</div>
         </div>
       </div>
@@ -1661,7 +2161,7 @@ with g2:
 #  GENERATION LOGIC
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 if generate:
-    final = st.session_state.script.strip()
+    final = st.session_state["sync_area"].strip()
     if not final:
         st.error("⚠️ Write some text in the editor first.")
     else:
