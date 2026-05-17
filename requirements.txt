@@ -1,0 +1,16 @@
+torch
+torchaudio
+transformers
+accelerate
+soundfile
+numpy
+scipy
+librosa
+sentencepiece
+einops
+requests
+gradio
+ffmpeg-python
+pydub
+safetensors
+huggingface_hub
