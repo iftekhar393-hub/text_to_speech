@@ -16,3 +16,4 @@ safetensors
 huggingface_hub
 streamlit
 soundfile
+kokoro-onnx
