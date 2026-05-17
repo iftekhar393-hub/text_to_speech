@@ -14,3 +14,5 @@ ffmpeg-python
 pydub
 safetensors
 huggingface_hub
+streamlit
+soundfile
